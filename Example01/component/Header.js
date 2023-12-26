@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
 
@@ -7,21 +7,16 @@ function Header() {
     const navigation = useNavigation();
 
     const handlePress = () => {
-        // Xử lý khi người dùng nhấn vào liên kết
         console.log('Link clicked!');
     };
     const Cart = () => {
-        // Navigate to the Cart screen
         navigation.navigate('Cart');
       };
-      
-
-    const [searchText, setSearchText] = useState('');
-    const handleSearchPress = () => {
-        // Xử lý khi người dùng nhấn vào nút tìm kiếm
-        console.log('Search clicked!');
-    };
-
+    const renderCategoryItem = ({ item }) => (
+        <TouchableOpacity onPress={() => handleCategoryPress(item)}>
+        <Text style={styles.categoryItem}>{item}</Text>
+        </TouchableOpacity>
+    );
     return (
         <View>
             <View style={styles.header1}>
@@ -34,7 +29,7 @@ function Header() {
                     </TouchableOpacity>
                 </View>
             </View>
-
+            
             <View style={styles.header2}>
                 <View style={styles.icon}>
                     <Icon name="navicon" size={20} color="#000000" />
@@ -51,17 +46,7 @@ function Header() {
                         </View>
                 </View>
             </View>
-            <View style={styles.searchContainer}>
-                        <TextInput
-                            style={styles.searchInput}
-                            placeholder="Tìm kiếm..."
-                            value={searchText}
-                            onChangeText={(text) => setSearchText(text)}
-                        />
-                        <TouchableOpacity onPress={handleSearchPress}>
-                            <Icon name="search" size={20} color="#000000" />
-                        </TouchableOpacity>
-            </View>
+            
         </View>
     );
 }
@@ -70,7 +55,7 @@ const styles = StyleSheet.create({
     
     header1: {
         width: '100%',
-        height: '20%',
+        height: '25%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -125,19 +110,22 @@ const styles = StyleSheet.create({
     colorWhite: {
         color: '#FFFFFF',
     },
-    searchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#e0e0e0',
-        borderRadius: 8,
-        margin:3,
-        padding: 1,
-        width:'100%',
-    },
-    searchInput: {
-        flex: 1,
-        
-    },
+    dropdownMenu: {
+        position: 'absolute',
+        top: 40,
+        right: 8,
+        backgroundColor: '#FFFFFF',
+        padding: 8,
+        borderRadius: 5,
+        elevation: 5,
+        zIndex: 1,
+      },
+    
+      categoryItem: {
+        fontSize: 16,
+        color: '#000000',
+        marginBottom: 8,
+      },
 });
 
 export default Header;

@@ -4,8 +4,8 @@ import { StyleSheet, View,ScrollView } from 'react-native';
 import Header from './component/Header';
 import Content from './component/Content';
 import Footer from './component/Footer';
-import Cart from './component/Cart';
-import ProductDetail from './component/ProductDetail';
+import Cart from './component/product/ProductCart';
+import ProductDetail from './component/product/ProductDetail';
 import { useFonts } from 'expo-font'; 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: '17%',
+    height: '12%',
     alignItems: 'center',
     backgroundColor: '#FF6633',
   },

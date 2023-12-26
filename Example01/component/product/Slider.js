@@ -4,8 +4,8 @@ import Carousel from 'react-native-snap-carousel';
 
 const Slider = () => {
   const slides = [
-    { id: 1, imageUrl: require('../assets/slider/slider_1.jpg'), text: 'Slide 1' },
-    { id: 2, imageUrl: require('../assets/slider/slider_2.jpg'), text: 'Slide 2' },
+    { id: 1, imageUrl: require('../../assets/slider/slider_1.jpg'), text: 'Slide 1' },
+    { id: 2, imageUrl: require('../../assets/slider/slider_2.jpg'), text: 'Slide 2' },
     // Add more slides here with corresponding image paths
   ];
 

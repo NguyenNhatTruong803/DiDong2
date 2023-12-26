@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image ,Alert} from 'react-native';
-import Footer from './Footer';
+import Footer from '../Footer';
 import { useFocusEffect } from '@react-navigation/native';
 
 const Cart = () => {
   const [cart, setCartItems] = useState([]);
-
   useFocusEffect(
     React.useCallback(() => {
       const fetchCart = async () => {
@@ -18,7 +17,6 @@ const Cart = () => {
           console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
         }
       };
-  
       fetchCart();
     }, []) // [] đảm bảo rằng hàm callback chỉ chạy khi component được mount và unmount
   );
@@ -33,8 +31,6 @@ const Cart = () => {
       console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
     }
   };
-  
-
   const updateQuantity = async (itemId, newQuantity) => {
     const updatedCart = cart.map((item) =>
       item.id === itemId ? { ...item, quantity: newQuantity } : item
