@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View,ScrollView } from 'react-native';
 import Header from './component/Header';
@@ -12,6 +12,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 export default function App() {
   const Stack = createStackNavigator();
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [fontLoaded] = useFonts({
     'Shizuru-Regular': require('./assets/fonts/Shizuru-Regular.ttf'),
     'JosefinSans-ExtraLight': require('./assets/fonts/JosefinSans-ExtraLight.ttf'),
@@ -61,11 +62,11 @@ export default function App() {
       </View>
   
       <ScrollView style={{ flex: 1, width: '100%' }}>
-        <Content />
+      <Content selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
       </ScrollView>
   
       <View style={styles.footer}>
-        <Footer />
+      <Footer setSelectedCategory={setSelectedCategory} />
       </View>
   
       <StatusBar style="auto" />
@@ -78,8 +79,8 @@ export default function App() {
   <NavigationContainer>
     <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="ProductDetail" component={ProductDetail} />
-        <Stack.Screen name="Cart" component={Cart}/>
+        <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerTitle:"Chi tiết sản phẩm" }}/>
+        <Stack.Screen name="Cart" component={Cart} options={{ headerTitle:"Giỏ hàng" }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

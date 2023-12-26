@@ -1,15 +1,17 @@
 // CategoryList.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { getCategories } from '../api/apiService';
-const CategoryList = ({ onSelectCategory }) => {
+
+const CategoryList = ({ onSelectCategory,onAllPress}) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const data = await getCategories();
-        setCategories(data);
+        const categoryData = await getCategories();
+        // Add "All" category to the beginning of the categories array
+        setCategories(['All', ...categoryData]);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
@@ -18,28 +20,42 @@ const CategoryList = ({ onSelectCategory }) => {
     fetchCategories();
   }, []);
 
-  const handleCategoryPress = (category) => {
-    onSelectCategory(category);
-  };
-
   const renderCategoryItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleCategoryPress(item)}>
-      <View>
-        <Text>{item.name}</Text>
+    <TouchableOpacity onPress={() => onSelectCategory(item)}>
+      <View style={styles.categoryItem}>
+        <Text>{item}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View>
-      <Text>Categories</Text>
-      <FlatList
-        data={categories}
-        renderItem={renderCategoryItem}
-        keyExtractor={(item) => item.id.toString()}
-      />
-    </View>
+    <View style={styles.container}>
+    <Text style={styles.title}>Categories</Text>
+    <FlatList
+      data={categories}
+      renderItem={renderCategoryItem}
+      keyExtractor={(item) => item.toString()}
+      horizontal
+    />
+  </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    margin: 10,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  categoryItem: {
+    backgroundColor: '#e0e0e0',
+    padding: 10,
+    borderRadius: 5,
+    marginRight: 10,
+  },
+});
 
 export default CategoryList;

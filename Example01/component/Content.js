@@ -7,26 +7,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getProducts } from './api/apiService'; 
 import ProductSearch from './product/ProductSearch'; // Import the ProductSearch component
 import CategoryList from './product/CategoryList';
-const Content = () => {
+import { getProductsByCategory } from './api/apiService';
+const Content = ({ selectedCategory, setSelectedCategory }) => {
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
   const [visibleSpringItemCount, setVisibleSpringItemCount] = useState(3);
   const [cart, setCartItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [searchText, setSearchText] = useState('');
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
+    fetchData();
+  }, [selectedCategory]);
+
+  const fetchData = async () => {
+    try {
+      if (selectedCategory === 'All' || !selectedCategory) {
         const data = await getProducts();
         setProducts(data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      } else {
+        const categoryProducts = await getProductsByCategory(selectedCategory);
+        setProducts(categoryProducts);
       }
-    };
-
-    fetchData();
-  }, []);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   const handleAddToCart = async (product) => {
     try {
@@ -83,13 +88,13 @@ const Content = () => {
 
   const handleSelectCategory = async (category) => {
     setSelectedCategory(category);
-    try {
-      const categoryProducts = await getProductsByCategory(category);
-      setProducts(categoryProducts);
-    } catch (error) {
-      console.error('Error fetching products by category:', error);
-    }
   };
+
+  const handleAllPress = async () => {
+    setSelectedCategory('All');
+    await fetchData();
+  };
+  
   return (
     <View>
       <ProductSearch
@@ -98,10 +103,17 @@ const Content = () => {
         onSearchPress={handleSearchPress}
       />
       <Slider />
-      <CategoryList onSelectCategory={handleSelectCategory} />
+      <CategoryList
+        onSelectCategory={handleSelectCategory}
+        onAllPress={handleAllPress}
+      />
       <View style={styles.container}>
         <View style={styles.container1}>
-          <Text style={styles.sectionTitle}>Spring Collection</Text>
+        <Text style={styles.sectionTitle}>
+          {selectedCategory !== null && selectedCategory !== 'All'
+            ? selectedCategory
+            : 'Tất cả sản phẩm'}
+        </Text>
           {visibleSpringItemCount < products.length && (
             <TouchableOpacity onPress={handleShowMoreSpring} style={styles.showMoreButton}>
               <Text style={styles.showMoreButtonText}>Xem thêm</Text>

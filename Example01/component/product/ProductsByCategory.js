@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getProductsByCategory } from './api/apiService'; // Assuming you have an appropriate API service function
+import { getProductsByCategory } from '../api/apiService'; // Assuming you have an appropriate API service function
 
 const ProductsByCategory = ({ route }) => {
   const { categoryId, categoryTitle } = route.params;

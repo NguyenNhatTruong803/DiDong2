@@ -60,7 +60,7 @@ const Cart = () => {
         </TouchableOpacity>
       </View>
       <TouchableOpacity onPress={() => removeItemFromCart(item.id)} style={styles.removeButton}>
-        <Text style={styles.removeButtonText}>Remove</Text>
+        <Text style={styles.removeButtonText}>Xóa</Text>
       </TouchableOpacity>
     </View>
   );
@@ -75,10 +75,10 @@ const Cart = () => {
             keyExtractor={(item) => item.id.toString()}
           />
         ) : (
-          <Text style={styles.emptyText}>Your cart is empty.</Text>
+          <Text style={styles.emptyText}>Giỏ hàng trống !</Text>
         )}
         <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Total:</Text>
+          <Text style={styles.totalText}>Tổng tiền:</Text>
           <Text style={styles.totalAmount}>${totalAmount}</Text>
         </View>
       </View>
