@@ -17,6 +17,11 @@ function Header() {
         <Text style={styles.categoryItem}>{item}</Text>
         </TouchableOpacity>
     );
+    const handleLoginPress = () => {
+        navigation.navigate('Login'); // Đổi tên màn hình nếu cần
+    };
+
+    
     return (
         <View>
             <View style={styles.header1}>
@@ -30,23 +35,25 @@ function Header() {
                 </View>
             </View>
             
+            
+
             <View style={styles.header2}>
                 <View style={styles.icon}>
                     <Icon name="navicon" size={20} color="#000000" />
                     <Text style={styles.header21}>TGSTORE </Text>
                 </View>
                 <View style={styles.header22}>
-                        <View style={styles.header222}>
-                            <Text style={styles.linkText1}>Đăng nhập</Text><Text> </Text>
-                            <Icon name="user-o" size={20} color="#000000" />
-                            <Text> </Text>
-                            <TouchableOpacity onPress={Cart}>
-                                <Icon name="shopping-cart" size={20} color="#000000" />
-                            </TouchableOpacity>
-                        </View>
+                    <View style={styles.header222}>
+                        <TouchableOpacity onPress={handleLoginPress}>
+                            <Text style={styles.linkText1}>Đăng nhập</Text>
+                        </TouchableOpacity>
+                        <Text> </Text>
+                        <TouchableOpacity onPress={Cart}>
+                            <Icon name="shopping-cart" size={25} color="#000000" />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
-            
         </View>
     );
 }

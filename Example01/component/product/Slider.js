@@ -26,7 +26,7 @@ const Slider = () => {
         layout={'default'}
         loop
         autoplay
-        autoplayInterval={5000} // Set the interval in milliseconds (e.g., 3000 for 3 seconds)
+        autoplayInterval={3000} // Set the interval in milliseconds (e.g., 3000 for 3 seconds)
       />
     </View>
   );

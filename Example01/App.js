@@ -1,4 +1,5 @@
 import React,{useState} from 'react';
+
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View,ScrollView } from 'react-native';
 import Header from './component/Header';
@@ -9,6 +10,9 @@ import ProductDetail from './component/product/ProductDetail';
 import { useFonts } from 'expo-font'; 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './component/user/LoginScreen';
+import SignUpScreen from './component/user/SignUpScreen';
+import Profile from './component/Profile';
 
 export default function App() {
   const Stack = createStackNavigator();
@@ -73,20 +77,20 @@ export default function App() {
     </View>
   );
   
-
   return (
-  
   <NavigationContainer>
     <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown:false }}/>
         <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerTitle:"Chi tiết sản phẩm" }}/>
         <Stack.Screen name="Cart" component={Cart} options={{ headerTitle:"Giỏ hàng" }}/>
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown:false }}/>
+        <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown:false }}/>
+        <Stack.Screen name="Profile" component={Profile} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
-  
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
   },
   header: {
     width: '100%',
-    height: '12%',
+    height: 80,
     alignItems: 'center',
     backgroundColor: '#FF6633',
   },

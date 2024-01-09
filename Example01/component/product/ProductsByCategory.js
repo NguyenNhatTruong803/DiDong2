@@ -23,7 +23,6 @@ const ProductsByCategory = ({ route }) => {
   }, [categoryId]);
 
   const handleProductPress = (product) => {
-    // You can navigate to the product detail screen or perform any other actions
     navigation.navigate('ProductDetail', { product });
   };
 

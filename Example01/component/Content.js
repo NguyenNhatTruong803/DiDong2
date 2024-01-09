@@ -8,13 +8,15 @@ import { getProducts } from './api/apiService';
 import ProductSearch from './product/ProductSearch'; // Import the ProductSearch component
 import CategoryList from './product/CategoryList';
 import { getProductsByCategory } from './api/apiService';
+
 const Content = ({ selectedCategory, setSelectedCategory }) => {
   const navigation = useNavigation();
   const [products, setProducts] = useState([]);
-  const [visibleSpringItemCount, setVisibleSpringItemCount] = useState(3);
+  // const [visibleSpringItemCount, setVisibleSpringItemCount] = useState(3);
   const [cart, setCartItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [searchText, setSearchText] = useState('');
+  
   useEffect(() => {
     fetchData();
   }, [selectedCategory]);
@@ -67,15 +69,15 @@ const Content = ({ selectedCategory, setSelectedCategory }) => {
     </TouchableOpacity>
   );
 
-  const handleShowMoreSpring = () => {
-    const dataToShow = searchResults.length > 0 ? searchResults : products;
-    const newVisibleCount =
-      visibleSpringItemCount === dataToShow.length ? 3 : dataToShow.length;
-    setVisibleSpringItemCount(newVisibleCount);
-  };
+  // const handleShowMoreSpring = () => {
+  //   const dataToShow = searchResults.length > 0 ? searchResults : products;
+  //   const newVisibleCount =
+  //     visibleSpringItemCount === dataToShow.length ? 3 : dataToShow.length;
+  //   setVisibleSpringItemCount(newVisibleCount);
+  // };
 
-  const handleProductPress = (product) => {
-    navigation.navigate('ProductDetail', { product, handleAddToCart });
+  const handleProductPress = (productid) => {
+    navigation.navigate('ProductDetail', { productid, handleAddToCart });
   };
 
   const handleSearchPress = () => {
@@ -87,7 +89,9 @@ const Content = ({ selectedCategory, setSelectedCategory }) => {
   };
 
   const handleSelectCategory = async (category) => {
-    setSelectedCategory(category);
+    if (selectedCategory !== category) {
+      setSelectedCategory(category);
+    }
   };
 
   const handleAllPress = async () => {
@@ -114,14 +118,14 @@ const Content = ({ selectedCategory, setSelectedCategory }) => {
             ? selectedCategory
             : 'Tất cả sản phẩm'}
         </Text>
-          {visibleSpringItemCount < products.length && (
+          {/* {visibleSpringItemCount < products.length && (
             <TouchableOpacity onPress={handleShowMoreSpring} style={styles.showMoreButton}>
               <Text style={styles.showMoreButtonText}>Xem thêm</Text>
             </TouchableOpacity>
-          )}
+          )} */}
         </View>
         <FlatList
-          data={searchResults.length > 0 ? searchResults.slice(0, visibleSpringItemCount) : products.slice(0, visibleSpringItemCount)}
+          data={searchResults.length > 0 ? searchResults.slice(0) : products.slice(0)}
           renderItem={renderProductItem}
           keyExtractor={(item) => item.id.toString()}
           horizontal

@@ -19,10 +19,14 @@ const Footer = ({ setSelectedCategory }) => {
     navigation.navigate('Home');
   };
 
+  const handleProfilePress = () => {
+    navigation.navigate('Profile');
+  };
+
   return (
     <View style={styles.footer}>
       
-        <TouchableOpacity style={styles.footer1} onPress={handleHomePress}>
+      <TouchableOpacity style={styles.footer1} onPress={handleHomePress}>
           <Icon name="home" size={20} color="#000000" />
           <Text>Trang Chủ</Text>
       </TouchableOpacity>
@@ -39,10 +43,10 @@ const Footer = ({ setSelectedCategory }) => {
         <Icon name="bell" size={20} color="#000000" />
         <Text>Thông Báo</Text>
       </View>
-      <View style={styles.footer1}>
-        <Icon name="grid" size={20} color="#000000" />
+      <TouchableOpacity style={styles.footer1} onPress={handleProfilePress}>
+        <Icon name="user" size={20} color="#000000" />
         <Text>Tôi</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -53,6 +57,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     height: 'auto',
+    backgroundColor:'white',
   },
   footer1: {
     flex: 1,

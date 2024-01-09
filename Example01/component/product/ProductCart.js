@@ -18,30 +18,51 @@ const Cart = () => {
         }
       };
       fetchCart();
-    }, []) // [] đảm bảo rằng hàm callback chỉ chạy khi component được mount và unmount
+    }, [])
   );
   
   const removeItemFromCart = async (itemId) => {
-    try {
-      const updatedCart = cart.filter((item) => item.id !== itemId);
-      setCartItems(updatedCart);
-  
-      await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
-    } catch (error) {
-      console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
-    }
-  };
-  const updateQuantity = async (itemId, newQuantity) => {
-    const updatedCart = cart.map((item) =>
-      item.id === itemId ? { ...item, quantity: newQuantity } : item
+    Alert.alert(
+      'Xác nhận',
+      'Bạn có chắc muốn xóa sản phẩm khỏi giỏ hàng?',
+      [
+        {
+          text: 'Có',
+          onPress: async () => {
+            try {
+              const updatedCart = cart.filter((item) => item.id !== itemId);
+              setCartItems(updatedCart);
+              await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
+            } catch (error) {
+              console.error('Lỗi khi xóa sản phẩm khỏi giỏ hàng:', error);
+            }
+          },
+        },
+        {
+          text: 'Không',
+          style: 'cancel',
+        },
+      ],
+      { cancelable: false }
     );
-    setCartItems(updatedCart);
-    try {
-      await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
-    } catch (error) {
-      console.error('Lỗi khi cập nhật AsyncStorage:', error);
+  };
+  
+  const updateQuantity = async (itemId, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeItemFromCart(itemId);
+    } else {
+      const updatedCart = cart.map((item) =>
+        item.id === itemId ? { ...item, quantity: newQuantity } : item
+      );
+      setCartItems(updatedCart);
+      try {
+        await AsyncStorage.setItem('cart', JSON.stringify(updatedCart));
+      } catch (error) {
+        console.error('Lỗi khi cập nhật AsyncStorage:', error);
+      }
     }
   };
+  
 
   const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
@@ -68,21 +89,21 @@ const Cart = () => {
   return (
     <>
       <View style={styles.container}>
-        {cart.length > 0 ? (
-          <FlatList
-            data={cart}
-            renderItem={renderCartItem}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        ) : (
-          <Text style={styles.emptyText}>Giỏ hàng trống !</Text>
-        )}
+          {cart.length > 0 ? (
+            <FlatList
+              data={cart}
+              renderItem={renderCartItem}
+              keyExtractor={(item) => item.id.toString()}
+            />
+          ) : (
+            <Text style={styles.emptyText}>Giỏ hàng trống !</Text>
+          )}
+       
         <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Tổng tiền:</Text>
-          <Text style={styles.totalAmount}>${totalAmount}</Text>
-        </View>
+            <Text style={styles.totalText}>Tổng tiền:</Text>
+            <Text style={styles.totalAmount}>${totalAmount}</Text>
+        </View> 
       </View>
-      <Footer />
     </>
   );
 };
@@ -90,7 +111,9 @@ const Cart = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 10,
+  },
+  container1: {
+    flexDirection: 'row',
   },
   title: {
     fontSize: 20,
@@ -98,12 +121,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cartItem: {
-    flex: 1,
     justifyContent: 'space-between',
+    flex:1,
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
     paddingVertical: 10,
+    marginBottom:30,
   },
   itemText: {
     fontSize: 16,
@@ -145,14 +169,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: 'center',
   },
-  totalContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 16,
-    borderTopWidth: 1,
-    paddingTop: 8,
-  },
+  
   totalText: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -170,6 +187,8 @@ const styles = StyleSheet.create({
     bottom: 0, // Thêm dòng này để phần tử nằm ở phía dưới
     left: 0, // Thêm dòng này để căn trái
     right: 0, // Thêm dòng này để căn phải
+    backgroundColor:"white",
+
   },
   quantityContainer: {
     flexDirection: 'row',

@@ -10,13 +10,11 @@ const CategoryList = ({ onSelectCategory,onAllPress}) => {
     const fetchCategories = async () => {
       try {
         const categoryData = await getCategories();
-        // Add "All" category to the beginning of the categories array
         setCategories(['All', ...categoryData]);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }
     };
-
     fetchCategories();
   }, []);
 
@@ -30,7 +28,7 @@ const CategoryList = ({ onSelectCategory,onAllPress}) => {
 
   return (
     <View style={styles.container}>
-    <Text style={styles.title}>Categories</Text>
+    <Text style={styles.title}>Danh mục</Text>
     <FlatList
       data={categories}
       renderItem={renderCategoryItem}
