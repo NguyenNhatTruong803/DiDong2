@@ -1,10 +1,7 @@
-import React,{useState} from 'react';
-
-import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import Home from './component/Home';
+import Checkout from './component/product/Checkout';
 import { StyleSheet, View,ScrollView } from 'react-native';
-import Header from './component/Header';
-import Content from './component/Content';
-import Footer from './component/Footer';
 import Cart from './component/product/ProductCart';
 import ProductDetail from './component/product/ProductDetail';
 import { useFonts } from 'expo-font'; 
@@ -13,10 +10,16 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './component/user/LoginScreen';
 import SignUpScreen from './component/user/SignUpScreen';
 import Profile from './component/Profile';
-
+import { AuthProvider } from './component/services/AuthProvider';
+import Toast from 'react-native-toast-message';
+import OrderDetail from './component/product/OrderDetail';
 export default function App() {
   const Stack = createStackNavigator();
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [orderDetail, setOrderDetail] = useState({
+    selectedProducts: [],
+    totalAmount: 0,
+    recipientInfo: {},
+  });
   const [fontLoaded] = useFonts({
     'Shizuru-Regular': require('./assets/fonts/Shizuru-Regular.ttf'),
     'JosefinSans-ExtraLight': require('./assets/fonts/JosefinSans-ExtraLight.ttf'),
@@ -59,35 +62,25 @@ export default function App() {
   if (!fontLoaded) {
     return <View />; // Render a loading indicator or placeholder while the font is loading
   }
-  const HomeScreen = () => (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Header />
-      </View>
-  
-      <ScrollView style={{ flex: 1, width: '100%' }}>
-      <Content selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
-      </ScrollView>
-  
-      <View style={styles.footer}>
-      <Footer setSelectedCategory={setSelectedCategory} />
-      </View>
-  
-      <StatusBar style="auto" />
-    </View>
-  );
   
   return (
   <NavigationContainer>
-    <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerTitle:"Chi tiết sản phẩm" }}/>
-        <Stack.Screen name="Cart" component={Cart} options={{ headerTitle:"Giỏ hàng" }}/>
-        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown:false }}/>
-        <Stack.Screen name="Profile" component={Profile} />
+    <AuthProvider>
+      <Stack.Navigator initialRouteName="Home">
+          <Stack.Screen name="Home" component={Home} options={{ headerShown:false }}/>
+          <Stack.Screen name="ProductDetail" component={ProductDetail} options={{ headerTitle:"Chi tiết sản phẩm" }}/>
+          <Stack.Screen name="Cart" component={Cart} options={{ headerTitle:"Giỏ hàng" }}/>
+          <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown:false }}/>
+          <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown:false }}/>
+          <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Checkout" options={{ title: 'Thanh toán' }}>
+            {(props) => <Checkout {...props} setOrderDetail={setOrderDetail} />}
+          </Stack.Screen>       
+          <Stack.Screen name="OrderDetail" component={OrderDetail} options={{ title: 'Đơn hàng' }} />
 
-      </Stack.Navigator>
+        </Stack.Navigator>
+        <Toast />
+      </AuthProvider>
     </NavigationContainer>
   );
 }

@@ -2,23 +2,39 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from '@react-navigation/native';
+import { useAuth } from './services/AuthProvider';
+import Toast from 'react-native-toast-message';
 
 function Header() {
     const navigation = useNavigation();
+    const { user } = useAuth();
 
     const handlePress = () => {
         console.log('Link clicked!');
     };
     const Cart = () => {
+        if(!user){
+            Toast.show({
+              type: 'error',
+              text1: 'Vui lòng đăng nhập !',
+              visibilityTime: 2000, // Thời gian hiển thị toast (milliseconds)
+            });
+            navigation.navigate('Login');
+            return;
+          }
         navigation.navigate('Cart');
-      };
+    };
     const renderCategoryItem = ({ item }) => (
         <TouchableOpacity onPress={() => handleCategoryPress(item)}>
         <Text style={styles.categoryItem}>{item}</Text>
         </TouchableOpacity>
     );
     const handleLoginPress = () => {
-        navigation.navigate('Login'); // Đổi tên màn hình nếu cần
+        if(user){
+            navigation.navigate('Profile');
+        }else{
+            navigation.navigate('Login'); // Đổi tên màn hình nếu cần
+        }
     };
 
     
@@ -35,8 +51,6 @@ function Header() {
                 </View>
             </View>
             
-            
-
             <View style={styles.header2}>
                 <View style={styles.icon}>
                     <Icon name="navicon" size={20} color="#000000" />
@@ -44,9 +58,16 @@ function Header() {
                 </View>
                 <View style={styles.header22}>
                     <View style={styles.header222}>
-                        <TouchableOpacity onPress={handleLoginPress}>
-                            <Text style={styles.linkText1}>Đăng nhập</Text>
-                        </TouchableOpacity>
+                        {user ? (
+                            <TouchableOpacity onPress={handleLoginPress}>
+                                <Text style={styles.linkText1}>Xin chào, {user.name.firstname}!</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity onPress={handleLoginPress}>
+                                <Text style={styles.linkText1}>Đăng nhập</Text>
+                            </TouchableOpacity>
+                        )}
+                        
                         <Text> </Text>
                         <TouchableOpacity onPress={Cart}>
                             <Icon name="shopping-cart" size={25} color="#000000" />
@@ -84,7 +105,7 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
         paddingRight: 8,
         color: '#000',
-        fontSize:16,
+        fontSize:18,
     },
     header2: {
         marginTop: 6,
@@ -96,12 +117,14 @@ const styles = StyleSheet.create({
     header21:{
         fontFamily:'Kalnia_SemiExpanded-Light',
         fontSize:20,
+        paddingLeft:3,
     },
     header22: {
         justifyContent: 'flex-end',
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        paddingRight:10,
     },
     header222: {
         flexDirection: 'row',
@@ -109,7 +132,7 @@ const styles = StyleSheet.create({
         padding: 1,
     },
     icon: {
-        paddingLeft: 8,
+        paddingLeft: 5,
         justifyContent: 'flex-start',
         flexDirection: 'row',
         alignItems: 'center',

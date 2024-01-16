@@ -2,13 +2,25 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getProductsByCategory } from '../api/apiService';
+import { getProductsByCategory } from '../services/apiService';
+import { useAuth } from '../services/AuthProvider';
+import Toast from 'react-native-toast-message';
 
 const ProductDetail = ({ route }) => {
   const { productid, handleAddToCart } = route.params;
   const navigation = useNavigation();
+  const { user } = useAuth();
 
   const handleAddToCartPress = () => {
+    if(!user){
+      Toast.show({
+        type: 'error',
+        text1: 'Vui lòng đăng nhập !',
+        visibilityTime: 2000, // Thời gian hiển thị toast (milliseconds)
+      });
+      navigation.navigate('Login');
+      return;
+    }
     handleAddToCart(productid);
     navigation.goBack();
   };

@@ -4,10 +4,12 @@ import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from
 import Slider from './product/Slider';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getProducts } from './api/apiService'; 
+import { getProducts } from './services/apiService'; 
 import ProductSearch from './product/ProductSearch'; // Import the ProductSearch component
 import CategoryList from './product/CategoryList';
-import { getProductsByCategory } from './api/apiService';
+import { getProductsByCategory } from './services/apiService';
+import Toast from 'react-native-toast-message';
+import { useAuth } from './services/AuthProvider';
 
 const Content = ({ selectedCategory, setSelectedCategory }) => {
   const navigation = useNavigation();
@@ -16,7 +18,8 @@ const Content = ({ selectedCategory, setSelectedCategory }) => {
   const [cart, setCartItems] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [searchText, setSearchText] = useState('');
-  
+  const { user } = useAuth();
+
   useEffect(() => {
     fetchData();
   }, [selectedCategory]);
@@ -37,6 +40,15 @@ const Content = ({ selectedCategory, setSelectedCategory }) => {
 
   const handleAddToCart = async (product) => {
     try {
+      if(!user){
+        Toast.show({
+          type: 'error',
+          text1: 'Vui lòng đăng nhập !',
+          visibilityTime: 2000, // Thời gian hiển thị toast (milliseconds)
+        });
+        navigation.navigate('Login');
+        return;
+      }
       const existingCart = await AsyncStorage.getItem('cart');
       const existingCartArray = existingCart ? JSON.parse(existingCart) : [];
       const existingProduct = existingCartArray.find(item => item.id === product.id);
@@ -47,14 +59,18 @@ const Content = ({ selectedCategory, setSelectedCategory }) => {
       }
       await AsyncStorage.setItem('cart', JSON.stringify(existingCartArray));
       setCartItems(existingCartArray);
-      Alert.alert('Thông báo', `Đã thêm sản phẩm ${product.title} vào giỏ hàng !`);
+      Toast.show({
+        type: 'success',
+        text1: `Đã thêm sản phẩm vào giỏ hàng !`,
+        visibilityTime: 2000, // Thời gian hiển thị toast (milliseconds)
+      });
     } catch (error) {
       console.error('Lỗi khi thêm vào giỏ hàng:', error);
     }
   };
 
   const renderProductItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleProductPress(item)}>
+    <TouchableOpacity onPress={() => handleProductPress(item.id)}>
       <View style={styles.productItem}>
         <Image source={{ uri: item.image }} style={styles.image} />
         <Text style={styles.productName} numberOfLines={2}>{item.title}</Text>

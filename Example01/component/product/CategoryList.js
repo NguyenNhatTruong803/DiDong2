@@ -1,7 +1,7 @@
 // CategoryList.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { getCategories } from '../api/apiService';
+import { getCategories } from '../services/apiService';
 
 const CategoryList = ({ onSelectCategory,onAllPress}) => {
   const [categories, setCategories] = useState([]);

@@ -1,14 +1,32 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity,Alert } from 'react-native';
+import { useAuth } from '../services/AuthProvider';
 
 function LoginScreen({ navigation }) {
+    const { login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Thực hiện xử lý đăng nhập ở đây
-        console.log('Đăng nhập với:', username, password);
-    };
+    const handleLogin = async () => {
+        try {
+          const response = await fetch('https://fakestoreapi.com/users');
+          const users = await response.json();
+    
+          const user = users.find((u) => u.username === username && u.password === password);
+    
+          if (user) {
+            // Đăng nhập thành công, lưu thông tin tài khoản
+            login(user);
+           
+            // Chuyển đến màn hình chính
+            navigation.navigate('Home');
+          } else {
+            Alert.alert('Thông báo', 'Đăng nhập thất bại. Vui lòng kiểm tra lại tên người dùng và mật khẩu.');
+          }
+        } catch (error) {
+          console.error('Lỗi khi thực hiện đăng nhập:', error);
+        }
+      };
 
     return (
         <View style={styles.container}>

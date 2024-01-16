@@ -30,3 +30,5 @@ export const getProductsByCategory = async (category) => {
     throw error;
   }
 };
+
+

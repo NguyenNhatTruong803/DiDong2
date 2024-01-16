@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     height: 'auto',
     backgroundColor:'white',
+    paddingTop:2,
   },
   footer1: {
     flex: 1,
