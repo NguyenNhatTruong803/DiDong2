@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList,TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const OrderDetail = () => {
   const [orderDetail, setOrderDetail] = useState({
@@ -8,6 +9,7 @@ const OrderDetail = () => {
     totalAmount: 0,
     recipientInfo: {},
   });
+  const [forceRender, setForceRender] = useState(false);
 
   useEffect(() => {
     // Fetch order details when the component mounts
@@ -35,8 +37,18 @@ const OrderDetail = () => {
     try {
       // Remove the order details from AsyncStorage
       await AsyncStorage.removeItem('orderDetail');
-      
+      setOrderDetail({
+        selectedProducts: [],
+        totalAmount: 0,
+        recipientInfo: {},
+      });
+      setForceRender((prev) => !prev);
       // Optionally, you may want to perform additional actions like navigating to another screen
+      Toast.show({
+        type: 'success',
+        text1: 'Xóa đơn hàng thành công !',
+        visibilityTime: 2000, // Thời gian hiển thị toast (milliseconds)
+      });
     } catch (error) {
       console.error('Error deleting order:', error);
     }
@@ -77,14 +89,21 @@ const OrderDetail = () => {
          
   return (
     <View style={styles.container}>
-      <View style={styles.orderSummary}> 
-      <Text style={styles.summaryTitle}>Thông tin đơn hàng</Text>
-      <FlatList
-        data={orderDetail}
-        renderItem={renderOrderItem}
-        keyExtractor={(item) => item.orderDate}
-      /> 
-      </View>
+      {orderDetail && orderDetail.length > 0 ? (
+        <View style={styles.orderSummary}>
+          <Text style={styles.summaryTitle}>Thông tin đơn hàng</Text>
+          <FlatList
+            data={orderDetail}
+            renderItem={renderOrderItem}
+            keyExtractor={(item) => item.orderDate}
+            extraData={forceRender}
+          />
+        </View>
+      ) : (
+        <View style={styles.noOrderContainer}>
+          <Text style={styles.noOrderText}>Không có đơn hàng</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -143,6 +162,15 @@ const styles = StyleSheet.create({
   deleteButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  noOrderContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
+  noOrderText: {
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

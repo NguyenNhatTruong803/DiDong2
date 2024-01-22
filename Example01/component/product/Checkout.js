@@ -163,6 +163,7 @@ const Checkout = ({ navigation, route }) => {
           placeholder="Số điện thoại"
           value={recipientInfo.phone}
           onChangeText={(text) => setRecipientInfo({ ...recipientInfo, phone: text })}
+          keyboardType="numeric"
         />
       </View><TouchableOpacity onPress={handlePayment} style={styles.paymentButton}>
         <Text style={styles.paymentButtonText}>Thanh toán</Text>

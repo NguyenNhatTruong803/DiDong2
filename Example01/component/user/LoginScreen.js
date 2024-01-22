@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity,Alert } from 'react-native';
 import { useAuth } from '../services/AuthProvider';
+import Toast from 'react-native-toast-message';
 
 function LoginScreen({ navigation }) {
     const { login } = useAuth();
@@ -17,7 +18,11 @@ function LoginScreen({ navigation }) {
           if (user) {
             // Đăng nhập thành công, lưu thông tin tài khoản
             login(user);
-           
+            Toast.show({
+                type: 'success',
+                text1: `Đăng nhập thành công !`,
+                visibilityTime: 1500, // Thời gian hiển thị toast (milliseconds)
+              });
             // Chuyển đến màn hình chính
             navigation.navigate('Home');
           } else {
